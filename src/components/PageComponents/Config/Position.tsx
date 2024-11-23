@@ -1,14 +1,14 @@
 import type { PositionValidation } from "@app/validation/config/position.tsx";
 import { DynamicForm } from "@components/Form/DynamicForm.tsx";
 import { useDevice } from "@core/stores/deviceStore.ts";
-import { Protobuf } from "@meshtastic/js";
+import { Protobuf, createProtobuf } from "@meshtastic/js";
 
 export const Position = (): JSX.Element => {
   const { config, nodes, hardware, setWorkingConfig } = useDevice();
 
   const onSubmit = (data: PositionValidation) => {
     setWorkingConfig(
-      new Protobuf.Config.Config({
+      createProtobuf(Protobuf.Config.ConfigSchema, {
         payloadVariant: {
           case: "position",
           value: data,

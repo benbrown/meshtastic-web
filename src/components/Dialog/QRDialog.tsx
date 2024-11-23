@@ -9,7 +9,7 @@ import {
 } from "@components/UI/Dialog.tsx";
 import { Input } from "@components/UI/Input.tsx";
 import { Label } from "@components/UI/Label.tsx";
-import { Protobuf, type Types } from "@meshtastic/js";
+import { createProtobuf, toBinary, Protobuf, type Types } from "@meshtastic/js";
 import { fromByteArray } from "base64-js";
 import { ClipboardIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -18,8 +18,8 @@ import { QRCode } from "react-qrcode-logo";
 export interface QRDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  loraConfig?: Protobuf.Config.Config_LoRaConfig;
-  channels: Map<Types.ChannelNumber, Protobuf.Channel.Channel>;
+  loraConfig?: Protobuf.Config.Config_LoRaConfigSchema;
+  channels: Map<Types.ChannelNumber, Protobuf.Channel.ChannelSchema>;
 }
 
 export const QRDialog = ({
@@ -39,13 +39,20 @@ export const QRDialog = ({
       .filter((ch) => selectedChannels.includes(ch.index))
       .map((channel) => channel.settings)
       .filter((ch): ch is Protobuf.Channel.ChannelSettings => !!ch);
-    const encoded = new Protobuf.AppOnly.ChannelSet(
-      new Protobuf.AppOnly.ChannelSet({
+
+    // TODO: This seems weird to have it wrapped twice?
+    // const encoded = new Protobuf.AppOnly.ChannelSet(
+    // new Protobuf.AppOnly.ChannelSet({
+    //   loraConfig,
+    //   settings: channelsToEncode,
+    // }),
+    const encoded = createProtobuf(Protobuf.AppOnly.ChannelSetSchema, 
+      {
         loraConfig,
         settings: channelsToEncode,
-      }),
-    );
-    const base64 = fromByteArray(encoded.toBinary())
+      });
+      
+    const base64 = fromByteArray(toBinary(Protobuf.AppOnly.ChannelSetSchema, encoded))
       .replace(/=/g, "")
       .replace(/\+/g, "-")
       .replace(/\//g, "_");

@@ -1,7 +1,7 @@
 import type { BluetoothValidation } from "@app/validation/config/bluetooth.tsx";
 import { DynamicForm } from "@components/Form/DynamicForm.tsx";
 import { useDevice } from "@core/stores/deviceStore.ts";
-import { Protobuf } from "@meshtastic/js";
+import { Protobuf, createProtobuf } from "@meshtastic/js";
 import { useState } from "react";
 
 export const Bluetooth = (): JSX.Element => {
@@ -23,7 +23,7 @@ export const Bluetooth = (): JSX.Element => {
 
   const onSubmit = (data: BluetoothValidation) => {
     setWorkingConfig(
-      new Protobuf.Config.Config({
+      createProtobuf(Protobuf.Config.ConfigSchema, {
         payloadVariant: {
           case: "bluetooth",
           value: data,

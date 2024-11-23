@@ -1,14 +1,14 @@
 import { useDevice } from "@app/core/stores/deviceStore.ts";
 import type { NeighborInfoValidation } from "@app/validation/moduleConfig/neighborInfo.tsx";
 import { DynamicForm } from "@components/Form/DynamicForm.tsx";
-import { Protobuf } from "@meshtastic/js";
+import { Protobuf, createProtobuf } from "@meshtastic/js";
 
 export const NeighborInfo = (): JSX.Element => {
   const { moduleConfig, setWorkingModuleConfig } = useDevice();
 
   const onSubmit = (data: NeighborInfoValidation) => {
     setWorkingModuleConfig(
-      new Protobuf.ModuleConfig.ModuleConfig({
+      createProtobuf(Protobuf.ModuleConfig.ModuleConfigSchema, {
         payloadVariant: {
           case: "neighborInfo",
           value: data,

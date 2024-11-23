@@ -22,7 +22,7 @@
   },
   "homepage": "https://meshtastic.org",
   "dependencies": {
-    "@bufbuild/protobuf": "^1.10.0",
+    "@bufbuild/protobuf": "^2.2.1",
     "@emeraldpay/hashicon-react": "^0.5.2",
     "@meshtastic/js": "2.3.7-5",
     "@noble/curves": "^1.5.0",
@@ -66,8 +66,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.2",
-    "@buf/meshtastic_protobufs.bufbuild_es": "1.10.0-20240906232734-3da561588c55.1",
     "@rsbuild/core": "^1.0.10",
+    "@rsbuild/plugin-node-polyfill": "^1.2.0",
     "@rsbuild/plugin-react": "^1.0.3",
     "@types/chrome": "^0.0.263",
     "@types/node": "^20.14.9",

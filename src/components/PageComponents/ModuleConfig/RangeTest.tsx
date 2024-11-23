@@ -1,14 +1,14 @@
 import type { RangeTestValidation } from "@app/validation/moduleConfig/rangeTest.tsx";
 import { DynamicForm } from "@components/Form/DynamicForm.tsx";
 import { useDevice } from "@core/stores/deviceStore.ts";
-import { Protobuf } from "@meshtastic/js";
+import { Protobuf, createProtobuf } from "@meshtastic/js";
 
 export const RangeTest = (): JSX.Element => {
   const { moduleConfig, setWorkingModuleConfig } = useDevice();
 
   const onSubmit = (data: RangeTestValidation) => {
     setWorkingModuleConfig(
-      new Protobuf.ModuleConfig.ModuleConfig({
+      createProtobuf(Protobuf.ModuleConfig.ModuleConfigSchema, {
         payloadVariant: {
           case: "rangeTest",
           value: data,

@@ -1,14 +1,14 @@
 import type { DisplayValidation } from "@app/validation/config/display.tsx";
 import { DynamicForm } from "@components/Form/DynamicForm.tsx";
 import { useDevice } from "@core/stores/deviceStore.ts";
-import { Protobuf } from "@meshtastic/js";
+import { Protobuf, createProtobuf } from "@meshtastic/js";
 
 export const Display = (): JSX.Element => {
   const { config, setWorkingConfig } = useDevice();
 
   const onSubmit = (data: DisplayValidation) => {
     setWorkingConfig(
-      new Protobuf.Config.Config({
+      createProtobuf(Protobuf.Config.ConfigSchema, {
         payloadVariant: {
           case: "display",
           value: data,
