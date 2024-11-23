@@ -5,19 +5,19 @@ import {
   convertIntToIpAddress,
   convertIpAddressToInt,
 } from "@core/utils/ip.ts";
-import { Protobuf } from "@meshtastic/js";
+import { Protobuf, createProtobuf } from "@meshtastic/js";
 
 export const Network = (): JSX.Element => {
   const { config, setWorkingConfig } = useDevice();
 
   const onSubmit = (data: NetworkValidation) => {
     setWorkingConfig(
-      new Protobuf.Config.Config({
+      createProtobuf(Protobuf.Config.ConfigSchema, {
         payloadVariant: {
           case: "network",
           value: {
             ...data,
-            ipv4Config: new Protobuf.Config.Config_NetworkConfig_IpV4Config({
+            ipv4Config: createProtobuf(Protobuf.Config.Config_NetworkConfig_IpV4ConfigSchema, {
               ip: convertIpAddressToInt(data.ipv4Config.ip) ?? 0,
               gateway: convertIpAddressToInt(data.ipv4Config.gateway) ?? 0,
               subnet: convertIpAddressToInt(data.ipv4Config.subnet) ?? 0,

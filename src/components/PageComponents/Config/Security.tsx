@@ -6,7 +6,7 @@ import {
 } from "@app/core/utils/x25519";
 import type { SecurityValidation } from "@app/validation/config/security.tsx";
 import { useDevice } from "@core/stores/deviceStore.ts";
-import { Protobuf } from "@meshtastic/js";
+import { Protobuf, createProtobuf } from "@meshtastic/js";
 import { fromByteArray, toByteArray } from "base64-js";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
@@ -37,7 +37,7 @@ export const Security = (): JSX.Element => {
     if (privateKeyValidationText || adminKeyValidationText) return;
 
     setWorkingConfig(
-      new Protobuf.Config.Config({
+      createProtobuf(Protobuf.Config.ConfigSchema, {
         payloadVariant: {
           case: "security",
           value: {

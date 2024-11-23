@@ -1,14 +1,14 @@
 import type { PaxcounterValidation } from "@app/validation/moduleConfig/paxcounter.tsx";
 import { DynamicForm } from "@components/Form/DynamicForm.tsx";
 import { useDevice } from "@core/stores/deviceStore.ts";
-import { Protobuf } from "@meshtastic/js";
+import { Protobuf, createProtobuf } from "@meshtastic/js";
 
 export const Paxcounter = (): JSX.Element => {
   const { moduleConfig, setWorkingModuleConfig } = useDevice();
 
   const onSubmit = (data: PaxcounterValidation) => {
     setWorkingModuleConfig(
-      new Protobuf.ModuleConfig.ModuleConfig({
+      createProtobuf(Protobuf.ModuleConfig.ModuleConfigSchema, {
         payloadVariant: {
           case: "paxcounter",
           value: data,

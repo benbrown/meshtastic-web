@@ -12,14 +12,14 @@ import { Input } from "@components/UI/Input.tsx";
 import { Label } from "@components/UI/Label.tsx";
 import { Switch } from "@components/UI/Switch.tsx";
 import { useDevice } from "@core/stores/deviceStore.ts";
-import { Protobuf } from "@meshtastic/js";
+import { Protobuf, createProtobuf, fromBinary } from "@meshtastic/js";
 import { toByteArray } from "base64-js";
 import { useEffect, useState } from "react";
 
 export interface ImportDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  loraConfig?: Protobuf.Config.Config_LoRaConfig;
+  loraConfig?: Protobuf.Config.Config_LoRaConfigSchema;
 }
 
 export const ImportDialog = ({
@@ -27,7 +27,7 @@ export const ImportDialog = ({
   onOpenChange,
 }: ImportDialogProps): JSX.Element => {
   const [importDialogInput, setImportDialogInput] = useState<string>("");
-  const [channelSet, setChannelSet] = useState<Protobuf.AppOnly.ChannelSet>();
+  const [channelSet, setChannelSet] = useState<Protobuf.AppOnly.ChannelSetSchema>();
   const [validUrl, setValidUrl] = useState<boolean>(false);
 
   const { connection } = useDevice();
@@ -55,7 +55,7 @@ export const ImportDialog = ({
         .replace(/-/g, "+")
         .replace(/_/g, "/");
       setChannelSet(
-        Protobuf.AppOnly.ChannelSet.fromBinary(toByteArray(paddedString)),
+       fromBinary(Protobuf.AppOnly.ChannelSetSchema, toByteArray(paddedString)),
       );
       setValidUrl(true);
     } catch (error) {
@@ -67,7 +67,7 @@ export const ImportDialog = ({
   const apply = () => {
     channelSet?.settings.map((ch, index) => {
       connection?.setChannel(
-        new Protobuf.Channel.Channel({
+        createProtobuf(Protobuf.Channel.ChannelSchema, {
           index,
           role:
             index === 0
@@ -80,7 +80,7 @@ export const ImportDialog = ({
 
     if (channelSet?.loraConfig) {
       connection?.setConfig(
-        new Protobuf.Config.Config({
+        createProtobuf(Protobuf.Config.ConfigSchema, {
           payloadVariant: {
             case: "lora",
             value: channelSet.loraConfig,

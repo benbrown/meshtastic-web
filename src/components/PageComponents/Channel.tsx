@@ -2,13 +2,13 @@ import type { ChannelValidation } from "@app/validation/channel.tsx";
 import { DynamicForm } from "@components/Form/DynamicForm.tsx";
 import { useToast } from "@core/hooks/useToast.ts";
 import { useDevice } from "@core/stores/deviceStore.ts";
-import { Protobuf } from "@meshtastic/js";
+import { Protobuf, createProtobuf } from "@meshtastic/js";
 import { fromByteArray, toByteArray } from "base64-js";
 import cryptoRandomString from "crypto-random-string";
 import { useState } from "react";
 
 export interface SettingsPanelProps {
-  channel: Protobuf.Channel.Channel;
+  channel: Protobuf.Channel.ChannelSchema;
 }
 
 export const Channel = ({ channel }: SettingsPanelProps): JSX.Element => {
@@ -24,7 +24,7 @@ export const Channel = ({ channel }: SettingsPanelProps): JSX.Element => {
   const [validationText, setValidationText] = useState<string>();
 
   const onSubmit = (data: ChannelValidation) => {
-    const channel = new Protobuf.Channel.Channel({
+    const channel = createProtobuf(Protobuf.Channel.ChannelSchema, {
       ...data,
       settings: {
         ...data.settings,

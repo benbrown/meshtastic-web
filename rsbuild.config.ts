@@ -1,4 +1,4 @@
-import { defineConfig } from "@rsbuild/core";
+import { defineConfig, rspack } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 import { execSync } from "node:child_process";
 import { pluginNodePolyfill } from '@rsbuild/plugin-node-polyfill'
@@ -12,7 +12,26 @@ try {
 }
 
 export default defineConfig({
-  plugins: [pluginReact(),pluginNodePolyfill()],
+  plugins: [pluginNodePolyfill(),pluginReact()],
+  tools: {
+    rspack: {
+      plugins: [
+        // new rspack.IgnorePlugin({
+        //   resourceRegExp: /.*/,
+        //   contextRegExp: /serialport/,
+        // }),
+        // new rspack.IgnorePlugin({
+        //   resourceRegExp: /.*/,
+        //   contextRegExp: /debug/,
+        // }),
+        // new rspack.IgnorePlugin({
+        //   resourceRegExp: /.*/,
+        //   contextRegExp: /stream/,
+        // }),
+
+      ],
+    }
+  },
   source: {
     define: {
       "process.env.COMMIT_HASH": JSON.stringify(hash),
@@ -23,6 +42,11 @@ export default defineConfig({
       "@components": "./src/components",
       "@core": "./src/core",
       "@layouts": "./src/layouts",
+    },
+  },
+  output: {
+    externals: {
+      'serialport': '{}',
     },
   },
   html: {

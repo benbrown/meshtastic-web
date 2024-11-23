@@ -1,14 +1,14 @@
 import type { SerialValidation } from "@app/validation/moduleConfig/serial.tsx";
 import { DynamicForm } from "@components/Form/DynamicForm.tsx";
 import { useDevice } from "@core/stores/deviceStore.ts";
-import { Protobuf } from "@meshtastic/js";
+import { Protobuf, createProtobuf } from "@meshtastic/js";
 
 export const Serial = (): JSX.Element => {
   const { moduleConfig, setWorkingModuleConfig } = useDevice();
 
   const onSubmit = (data: SerialValidation) => {
     setWorkingModuleConfig(
-      new Protobuf.ModuleConfig.ModuleConfig({
+      createProtobuf(Protobuf.ModuleConfig.ModuleConfigSchema, {
         payloadVariant: {
           case: "serial",
           value: data,

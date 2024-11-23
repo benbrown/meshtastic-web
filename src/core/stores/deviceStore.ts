@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 import { produce } from "immer";
 import { create } from "zustand";
 
-import { Protobuf, Types } from "@meshtastic/js";
+import { createProtobuf, Protobuf, Types } from "@meshtastic/js";
 
 export type Page = "messages" | "map" | "config" | "channels" | "nodes";
 
@@ -118,11 +118,11 @@ export const useDeviceStore = create<DeviceState>((set, get) => ({
           id,
           status: Types.DeviceStatusEnum.DeviceDisconnected,
           channels: new Map(),
-          config: new Protobuf.LocalOnly.LocalConfig(),
-          moduleConfig: new Protobuf.LocalOnly.LocalModuleConfig(),
+          config: createProtobuf(Protobuf.LocalOnly.LocalConfigSchema, {}),
+          moduleConfig: createProtobuf(Protobuf.LocalOnly.LocalModuleConfigSchema, {}),
           workingConfig: [],
           workingModuleConfig: [],
-          hardware: new Protobuf.Mesh.MyNodeInfo(),
+          hardware: createProtobuf(Protobuf.Mesh.MyNodeInfoSchema, {}),
           nodes: new Map(),
           metadata: new Map(),
           messages: {
@@ -442,7 +442,7 @@ export const useDeviceStore = create<DeviceState>((set, get) => ({
                   return;
                 }
                 const currentNode =
-                  device.nodes.get(user.from) ?? new Protobuf.Mesh.NodeInfo();
+                  device.nodes.get(user.from) ?? createProtobuf(Protobuf.Mesh.NodeInfoSchema, {});
                 currentNode.user = user.data;
                 device.nodes.set(user.from, currentNode);
               }),
@@ -457,7 +457,7 @@ export const useDeviceStore = create<DeviceState>((set, get) => ({
                 }
                 const currentNode =
                   device.nodes.get(position.from) ??
-                  new Protobuf.Mesh.NodeInfo();
+                  createProtobuf(Protobuf.Mesh.NodeInfoSchema, {});
                 currentNode.position = position.data;
                 device.nodes.set(position.from, currentNode);
               }),
@@ -612,7 +612,7 @@ export const useDeviceStore = create<DeviceState>((set, get) => ({
                 } else {
                   device.nodes.set(
                     data.from,
-                    new Protobuf.Mesh.NodeInfo({
+                    createProtobuf(Protobuf.Mesh.NodeInfoSchema, {
                       num: data.from,
                       lastHeard: data.time,
                       snr: data.snr,
